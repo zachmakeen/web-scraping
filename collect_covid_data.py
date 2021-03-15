@@ -5,19 +5,23 @@ from bs4 import BeautifulSoup
 
 class CollectData:
     def __init__(self):
-        self.url = "https://www.worldometers.info/coronavirus/"
-        self.soup = self.__parse_html()
-        self.store_data()
+        # self.url = "https://www.worldometers.info/coronavirus/"
+        self.url = open("website/Coronavirus Update (Live)_ 120,669,548 Cases and 2,669,118 Deaths from COVID-19 Virus Pandemic - Worldometer.html", encoding="utf8")
+        self.__store_html()
+        # self.soup = self.__parse_html()
+        # self.store_data()
 
     def __parse_html(self):
         try:
             request = Request(self.url, headers={'User-Agent': 'Mozilla/5.0'})
             page = urlopen(request)
             html = page.read().decode("utf-8")
-            return BeautifulSoup(open("website/Coronavirus Update (Live)_ 120,669,548 Cases and 2,669,118 Deaths from COVID-19 Virus Pandemic - Worldometer.html", encoding="utf8"), "html.parser")
+            return BeautifulSoup(self.url, "html.parser")
             #return BeautifulSoup(html, "html.parser")
         except urllib.error.HTTPError as error:
             print(error)
+
+
 
     def store_data(self):
         htmllist = self.soup.find_all("tr", style="")
