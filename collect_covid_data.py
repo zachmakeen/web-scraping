@@ -14,7 +14,8 @@ class CollectData:
             request = Request(self.url, headers={'User-Agent': 'Mozilla/5.0'})
             page = urlopen(request)
             html = page.read().decode("utf-8")
-            return BeautifulSoup(html, "html.parser")
+            return BeautifulSoup(open("website/Coronavirus Update (Live)_ 120,669,548 Cases and 2,669,118 Deaths from COVID-19 Virus Pandemic - Worldometer.html", encoding="utf8"), "html.parser")
+            #return BeautifulSoup(html, "html.parser")
         except urllib.error.HTTPError as error:
             print(error)
 
