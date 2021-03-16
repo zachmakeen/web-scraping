@@ -4,12 +4,32 @@ from bs4 import BeautifulSoup
 import datetime
 
 
-class CollectData:
+class ScrapeData:
     def __init__(self):
         self.__url = "https://www.worldometers.info/coronavirus/"
-        self.__download_html()
-        # self.__soup = self.__parse_html()
+        self.__console_interaction()
+        self.__soup = ''
         # self.__store_data()
+
+    def __console_interaction(self):
+        print('Type "help" to see more commands')
+        command = ''
+        while True:
+            command = input('> ').lower()
+            if command == 'help':
+                print('''
+                download data - to download html to a local file
+                scrape data - to scrape from a local file
+                quit - to end the program
+                ''')
+            elif command == 'download data':
+                self.__download_html()
+            elif command == 'scrape data':
+                self.__soup = self.__parse_html()
+            elif command == 'quit':
+                break
+            else:
+                print('Sorry, that is not a valid command.')
 
     def __download_html(self):
         try:
@@ -23,16 +43,9 @@ class CollectData:
             print(error)
 
     def __parse_html(self):
-        with open("html-pages/2021-03-15.html", encoding="utf-8") as html:
+        with open("local_html/local_file2021-03-15.html", encoding="utf-8") as html:
             return BeautifulSoup(html.read(), "html.parser")
 
     def __store_data(self):
         table = self.__soup.find(id="main_table_countries_today")
-
-# Path: <div class="tab_content" id="nav-tabContent">
-#           <div class="tab-pane active" id="nav-today" role="tabpanel" arialabelledby="nav-today-tab">
-#               <div class="main_table_countries_div">
-#                   <table id="main_table_countries_today_wrapper" class="table table_bordered table_hover main)table_countries database no_footer" style="width: 100%; margin-top: 0px !important;">
-#                       <tbody>
-#           <div class="tab-pane active" id="nav-yesterday" role="tabpanel" arialabelledby="nav-yesterday-tab">
-#           <div class="tab-pane active" id="nav-yesterday2" role="tabpanel" arialabelledby="nav-yesterday2-tab">
+        print(table)
