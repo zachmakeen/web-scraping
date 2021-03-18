@@ -52,26 +52,26 @@ class ScrapeData:
             return BeautifulSoup(html.read(), "html.parser")
 
     def __store_data(self):
-        table = self.__soup.find(id="main_table_countries_today")
-        #countries = table.findAll('a', class_="mt_a")
-        #treven = table.find_all('td')
-        #print(len(countries))
+        table = self.__soup.find(id="main_table_countries_today") # locating the table in the html
         datalist = []
         for row in table.find_all('tr')[1:]:
             cols = row.find_all('td')
-            temlist = []
+            tempCol = []
             for data in cols[:-4]:
-                h = data.text
-                h= re.sub('\n|\+|\s\s+|,', '', h)
-                if h == '':
-                    h = None
-                elif re.match('\d.\d',h):
-                    h = float(h)
-                elif re.match('\d',h):
-                    h = int(h)
-                temlist.append(h)
-            temlist.pop(7)
-            datalist.append(temlist)
+                tempCol.append(self.__clean_String(data.text))
+            tempCol.pop(7)
+            datalist.append(tempCol)
+            return datalist[8:-8]  # Getting rid of the first lines and the last ones that are not useful
 
-        for i in datalist[8:-8]:
-            print(i)
+    # This method takes as input a string and then cleans it from the unnecessary characters.
+    def __clean_String(self, strData):
+        tempStr = ''
+        tempStr = re.sub('\n|\+|\s\s+|,', '', strData)
+        if tempStr == '':
+            return None
+        elif re.match('\d.\d', tempStr):  # the string contains a float digit, it casts it and returns the value
+            return float(tempStr)
+        elif re.match('\d', tempStr):  # the string contains a int digit, it casts it and returns the value
+            return int(tempStr)
+        else:
+            return tempStr  # returns the string if it is ok
