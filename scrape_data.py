@@ -38,8 +38,12 @@ class ScrapeData:
     def __generate_dataframe(self, table_row_list):
         data = self.__clean_table_row(table_row_list)
         covid_data_frame = pandas.DataFrame(data, columns=self.__headers)
-        print(covid_data_frame)
+        self.__create_Json(covid_data_frame)
+        #print(covid_data_frame)
         return covid_data_frame
+
+    def __create_Json(self, covid_data_frame):
+        covid_data_frame.to_json(f'covid_json/test.json', orient='records', lines=True)
 
     def __clean_table_row(self, table_row_list):
         clean_data = []

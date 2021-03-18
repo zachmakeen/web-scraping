@@ -61,7 +61,7 @@ class ScrapeData:
                 tempCol.append(self.__clean_String(data.text))
             tempCol.pop(7)
             datalist.append(tempCol)
-            return datalist[8:-8]  # Getting rid of the first lines and the last ones that are not useful
+        return datalist[8:-8]  # Getting rid of the first lines and the last ones that are not useful
 
     # This method takes as input a string and then cleans it from the unnecessary characters.
     def __clean_String(self, strData):
