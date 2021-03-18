@@ -1,6 +1,7 @@
 import urllib
 from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
+import pandas as pd
 import datetime
 import re
 
@@ -52,13 +53,25 @@ class ScrapeData:
 
     def __store_data(self):
         table = self.__soup.find(id="main_table_countries_today")
-        countries = table.findAll('a', class_="mt_a")
-        treven = table.find_all('tr')
-        print(len(countries))
-        for c in treven[:-8]:
-            h= re.sub('\n|\+|,', '', c.text)
-            h = re.sub('\s+',' ',h)
-            h = h[1:-1].lower()
-            re.split('a-z',)
-            print(h)
+        #countries = table.findAll('a', class_="mt_a")
+        #treven = table.find_all('td')
+        #print(len(countries))
+        datalist = []
+        for row in table.find_all('tr')[1:]:
+            cols = row.find_all('td')
+            temlist = []
+            for data in cols[:-4]:
+                h = data.text
+                h= re.sub('\n|\+|\s\s+|,', '', h)
+                if h == '':
+                    h = None
+                elif re.match('\d.\d',h):
+                    h = float(h)
+                elif re.match('\d',h):
+                    h = int(h)
+                temlist.append(h)
+            temlist.pop(7)
+            datalist.append(temlist)
 
+        for i in datalist[8:-8]:
+            print(i)
