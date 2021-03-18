@@ -19,4 +19,4 @@ from collect_covid_data import ScrapeData
 #     else:
 #         print('Sorry, that is not a valid command.')
 
-ScrapeData()
+data = ScrapeData()
