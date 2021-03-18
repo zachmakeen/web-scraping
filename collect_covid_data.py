@@ -61,3 +61,4 @@ class ScrapeData:
             h = h[1:-1].lower()
             re.split('a-z',)
             print(h)
+
