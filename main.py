@@ -1,4 +1,4 @@
-from collect_covid_data import ScrapeData
+from scrape_data import ScrapeData
 
 # print('Type "help" to see more commands')
 # command = ''
