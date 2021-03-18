@@ -2,6 +2,7 @@ import urllib
 from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
 import datetime
+import re
 
 
 class ScrapeData:
@@ -9,7 +10,7 @@ class ScrapeData:
         self.__url = "https://www.worldometers.info/coronavirus/"
         self.__console_interaction()
         self.__soup = ''
-        # self.__store_data()
+        #self.__store_data()
 
     def __console_interaction(self):
         print('Type "help" to see more commands')
@@ -17,15 +18,18 @@ class ScrapeData:
         while True:
             command = input('> ').lower()
             if command == 'help':
-                print('''
+                print("""
                 download data - to download html to a local file
                 scrape data - to scrape from a local file
                 quit - to end the program
-                ''')
+                """)
             elif command == 'download data':
                 self.__download_html()
             elif command == 'scrape data':
-                self.__soup = self.__parse_html()
+                inDate = input('enter the day')
+                self.__soup = self.__parse_html(inDate)
+            elif command == 'store':
+                self.__store_data()
             elif command == 'quit':
                 break
             else:
@@ -42,10 +46,18 @@ class ScrapeData:
         except urllib.error.HTTPError as error:
             print(error)
 
-    def __parse_html(self):
-        with open("local_html/local_file2021-03-15.html", encoding="utf-8") as html:
+    def __parse_html(self,inDate):
+        with open(f"local_html/local_file2021-03-{inDate}.html", encoding="utf-8") as html:
             return BeautifulSoup(html.read(), "html.parser")
 
     def __store_data(self):
         table = self.__soup.find(id="main_table_countries_today")
-        print(table)
+        countries = table.findAll('a', class_="mt_a")
+        treven = table.find_all('tr')
+        print(len(countries))
+        for c in treven[:-8]:
+            h= re.sub('\n|\+|,', '', c.text)
+            h = re.sub('\s+',' ',h)
+            h = h[1:-1].lower()
+            re.split('a-z',)
+            print(h)
