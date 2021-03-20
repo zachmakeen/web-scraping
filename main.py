@@ -1,5 +1,5 @@
 from scrape_data import ScrapeData
-
+from add_data_to_database import CreateDatabase
 # print('Type "help" to see more commands')
 # command = ''
 # while True:
@@ -12,6 +12,7 @@ from scrape_data import ScrapeData
 #         ''')
 #     elif command == 'scrape':
 #         ScrapeData()
+#         CreateDatabase()
 #     elif command == 'analyse':
 #         pass
 #     elif command == 'quit':
@@ -19,4 +20,6 @@ from scrape_data import ScrapeData
 #     else:
 #         print('Sorry, that is not a valid command.')
 
-data = ScrapeData()
+#ScrapeData()
+CreateDatabase()
+
