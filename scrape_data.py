@@ -9,15 +9,15 @@ from datetime import datetime
 class ScrapeData:
     def __init__(self):
         self.__url = "https://www.worldometers.info/coronavirus/"
-        self.__headers = ['#', 'Country, Other', 'Total Cases', 'New Cases', 'Total Deaths', 'New Deaths',
+        self.__headers = ['Date', '#', 'Country, Other', 'Total Cases', 'New Cases', 'Total Deaths', 'New Deaths',
                           'Total Recovered', 'Active Cases', 'Serious, Critical', 'Tot Cases/1M pop', 'Deaths/1M pop',
                           'Total Tests', 'Tests/1M pop', 'Population']
         self.__soup = self.__parse_html(18)
         self.__table_id_list = ['main_table_countries_today', 'main_table_countries_yesterday',
                                 'main_table_countries_yesterday2']
-        self.__today_data_frame = self.__generate_dataframe(self.__soup.find(id=self.__table_id_list[0]).find_all('tr'))
-        # self.__yesterday_data_frame = self.__generate_dataframe(self.__soup.find(id=self.__table_id_list[1]).find_all('tr'))
-        # self.__yesterday2_data_frame = self.__generate_dataframe(self.__soup.find(id=self.__table_id_list[2]).find_all('tr'))
+        self.__today_data_frame = self.__generate_dataframe(self.__soup.find(id=self.__table_id_list[0]).find_all('tr'), 'today')
+        self.__yesterday_data_frame = self.__generate_dataframe(self.__soup.find(id=self.__table_id_list[1]).find_all('tr'), 'yesterday')
+        self.__yesterday2_data_frame = self.__generate_dataframe(self.__soup.find(id=self.__table_id_list[2]).find_all('tr'), 'yesterday2')
 
     def __download_html(self):
         try:
@@ -35,24 +35,27 @@ class ScrapeData:
                   encoding="utf-8") as html:
             return BeautifulSoup(html.read(), "html.parser")
 
-    def __generate_dataframe(self, table_row_list):
+    def __generate_dataframe(self, table_row_list, table_day):
         data = self.__clean_table_row(table_row_list)
         covid_data_frame = pandas.DataFrame(data, columns=self.__headers)
-        self.__create_Json(covid_data_frame)
+        self.__create_Json(covid_data_frame, table_day)
         #print(covid_data_frame)
         return covid_data_frame
 
-    def __create_Json(self, covid_data_frame):
-        covid_data_frame.to_json(f'covid_json/test.json', orient='records', lines=True)
+    def __create_Json(self, covid_data_frame, table_day):
+        covid_data_frame.to_json(f'covid_json/{table_day}.json', orient='records', lines=True)
 
     def __clean_table_row(self, table_row_list):
+        table_date = self.__soup.find(class_='news_date')
         clean_data = []
         for table_row in table_row_list[1:]:
             table_entry_list = table_row.find_all('td')
             temp_table_row = []
+            # if statement
+            temp_table_row.append(self.__clean_table_entry(table_date.text))
             for table_entry in table_entry_list[:-4]:
                 temp_table_row.append(self.__clean_table_entry(table_entry.text))
-            temp_table_row.pop(7)
+            temp_table_row.pop(8)
             clean_data.append(temp_table_row)
         return clean_data[8:-8]
 

@@ -20,6 +20,6 @@ from add_data_to_database import CreateDatabase
 #     else:
 #         print('Sorry, that is not a valid command.')
 
-#ScrapeData()
-CreateDatabase()
+ScrapeData()
+#CreateDatabase()
 

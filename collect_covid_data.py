@@ -52,6 +52,8 @@ class ScrapeData:
             return BeautifulSoup(html.read(), "html.parser")
 
     def __store_data(self):
+        date = self.__soup.find(class_='news_date').text
+
         table = self.__soup.find(id="main_table_countries_today") # locating the table in the html
         datalist = []
         for row in table.find_all('tr')[1:]:
