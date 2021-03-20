@@ -1,5 +1,5 @@
 from scrape_save_data_second import ScrapeAndSaveData
-# from add_data_to_database import CreateDatabase
+from add_data_to_database import CreateDatabase
 
 
 # print('Type "help" to see more commands')
@@ -23,6 +23,7 @@ from scrape_save_data_second import ScrapeAndSaveData
 #         print('Sorry, that is not a valid command.')
 
 data_object = ScrapeAndSaveData()
+# print(data_object.get_today_data())
 # data_object.console_interaction()
-#CreateDatabase(data_object)
+CreateDatabase(data_object)
 

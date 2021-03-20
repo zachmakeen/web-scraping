@@ -92,7 +92,7 @@ quit - to end the program
         for table_row in table_row_list[1:]:
             temp_table_row = []
             table_entry_list = table_row.find_all('td')
-            for table_entry in table_entry_list[:-4]:
+            for table_entry in table_entry_list:
                 temp_table_row.append(self.__clean_table_entry(table_entry.text))
             temp_table_row.pop(7)
             clean_data.append(temp_table_row)

@@ -1,8 +1,8 @@
 import datetime
-import pandas
 import re
 import urllib
 from urllib.request import Request, urlopen
+from add_data_to_database import CreateDatabase
 from bs4 import BeautifulSoup
 
 
@@ -13,12 +13,6 @@ class ScrapeAndSaveData:
         self.__current_year = current_year
         self.__current_month = current_month
         self.__user_day = None
-        self.__today_date = None
-        self.__yesterday_date = None
-        self.__yesterday2_date = None
-        self.__today_data = None
-        self.__yesterday_data = None
-        self.__yesterday2_data = None
 
         # Save file locally
 
@@ -26,18 +20,24 @@ class ScrapeAndSaveData:
 
         # Scrape local file
 
-        # self.__user_day = int(input('Enter the day in digits to scrape your local file (e.g. 05): '))
-        # self.__today_date = str(datetime.datetime(self.__current_year, self.__current_month, self.__user_day).date())
-        # self.__yesterday_date = str(
-        #     datetime.datetime(self.__current_year, self.__current_month, self.__user_day).date() - datetime.timedelta(
-        #         days=1))
-        # self.__yesterday2_date = str(
-        #     datetime.datetime(self.__current_year, self.__current_month, self.__user_day).date() - datetime.timedelta(
-        #         days=2))
-        # soup = self.__parse_html()
-        # self.__generate_dataframe(soup.find(id='main_table_countries_today'))
-        # self.__generate_dataframe(soup.find(id='main_table_countries_yesterday'))
-        # self.__generate_dataframe(soup.find(id='main_table_countries_yesterday2'))
+        self.__user_day = int(input('Enter the day in digits to scrape your local file (e.g. 05): '))
+        today_date = str(datetime.datetime(self.__current_year, self.__current_month, self.__user_day).date())
+        yesterday_date = str(
+            datetime.datetime(self.__current_year, self.__current_month, self.__user_day).date() - datetime.timedelta(
+                days=1))
+        yesterday2_date = str(
+            datetime.datetime(self.__current_year, self.__current_month, self.__user_day).date() - datetime.timedelta(
+                days=2))
+        soup = self.__parse_html()
+        today_data = self.__generate_data_list(soup.find(id='main_table_countries_today'))
+        yesterday_data = self.__generate_data_list(soup.find(id='main_table_countries_yesterday'))
+        yesterday2_data = self.__generate_data_list(soup.find(id='main_table_countries_yesterday2'))
+        today_table = CreateDatabase(today_date)
+        yesterday_table = CreateDatabase(yesterday_date)
+        yesterday2_table = CreateDatabase(yesterday2_date)
+        today_table.store_data(today_data)
+        yesterday_table.store_data(yesterday_data)
+        yesterday2_table.store_data(yesterday2_data)
 
     def console_interaction(self):
         print("""
@@ -51,13 +51,19 @@ quit - to end the program
                 self.__download_html()
             elif command == 'scrape data':
                 self.__user_day = int(input('Enter the day in digits to scrape your local file (e.g. 05): '))
-                self.__today_date = str(datetime.datetime(self.__current_year, self.__current_month, self.__user_day).date())
-                self.__yesterday_date = str(datetime.datetime(self.__current_year, self.__current_month, self.__user_day).date() - datetime.timedelta(days=1))
-                self.__yesterday2_date = str(datetime.datetime(self.__current_year, self.__current_month, self.__user_day).date() - datetime.timedelta(days=2))
+                today_date = str(datetime.datetime(self.__current_year, self.__current_month, self.__user_day).date())
+                yesterday_date = str(datetime.datetime(self.__current_year, self.__current_month, self.__user_day).date() - datetime.timedelta(days=1))
+                yesterday2_date = str(datetime.datetime(self.__current_year, self.__current_month, self.__user_day).date() - datetime.timedelta(days=2))
                 soup = self.__parse_html()
-                self.__today_data = self.__generate_data_list(soup.find(id='main_table_countries_today'))
-                self.__yesterday_data = self.__generate_data_list(soup.find(id='main_table_countries_yesterday'))
-                self.__yesterday2_data = self.__generate_data_list(soup.find(id='main_table_countries_yesterday2'))
+                today_data = self.__generate_data_list(soup.find(id='main_table_countries_today'))
+                yesterday_data = self.__generate_data_list(soup.find(id='main_table_countries_yesterday'))
+                yesterday2_data = self.__generate_data_list(soup.find(id='main_table_countries_yesterday2'))
+                today_table = CreateDatabase(today_date)
+                yesterday_table = CreateDatabase(yesterday_date)
+                yesterday2_table = CreateDatabase(yesterday2_date)
+                today_table.store_data(today_data)
+                yesterday_table.store_data(yesterday_data)
+                yesterday2_table.store_data(yesterday2_data)
             elif command == 'quit':
                 break
             else:
@@ -74,7 +80,7 @@ quit - to end the program
             print(error)
 
     def __parse_html(self):
-        with open(f"local_html/local_file{datetime.datetime.now().strftime('%Y')}-{datetime.datetime.now().strftime('%m')}-{self.__user_day}.html", encoding="utf-8") as html:
+        with open(f"local_html/local_file{self.__current_year}-{self.__current_month}-{self.__user_day}.html", encoding="utf-8") as html:
             return BeautifulSoup(html.read(), "html.parser")
 
     def __generate_data_list(self, table_row_list):
@@ -86,7 +92,7 @@ quit - to end the program
         for table_row in table_row_list[1:]:
             temp_table_row = []
             table_entry_list = table_row.find_all('td')
-            for table_entry in table_entry_list[:-4]:
+            for table_entry in table_entry_list:
                 temp_table_row.append(self.__clean_table_entry(table_entry.text))
             temp_table_row.pop(7)
             clean_data.append(tuple(temp_table_row))
@@ -102,21 +108,3 @@ quit - to end the program
             return int(table_entry)
         else:
             return table_entry
-
-    def get_today_date(self):
-        return self.__today_date
-
-    def get_yesterday_date(self):
-        return self.__yesterday_date
-
-    def get_yesterday2_date(self):
-        return self.__yesterday2_date
-
-    def get_today_data(self):
-        return self.__today_data
-
-    def get_yesterday_data(self):
-        return self.__yesterday_data
-
-    def get_yesterday2_data(self):
-        return self.__yesterday2_data
