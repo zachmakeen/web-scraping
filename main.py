@@ -1,5 +1,7 @@
-from scrape_data import ScrapeData
-from add_data_to_database import CreateDatabase
+from scrape_save_data_second import ScrapeAndSaveData
+# from add_data_to_database import CreateDatabase
+
+
 # print('Type "help" to see more commands')
 # command = ''
 # while True:
@@ -20,6 +22,7 @@ from add_data_to_database import CreateDatabase
 #     else:
 #         print('Sorry, that is not a valid command.')
 
-ScrapeData()
-#CreateDatabase()
+data_object = ScrapeAndSaveData()
+# data_object.console_interaction()
+#CreateDatabase(data_object)
 
