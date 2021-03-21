@@ -4,20 +4,27 @@ import os
 
 class CreateDatabase:
 
-    def __init__(self):
-        self.__dbConn = self.__connect_to_db()
-        self.create_db('covid_corona_db_MAKE_RIVA')  # Creating a data base
-        self.table_schema = ''
-        pass
+    def __init__(self, date, db_name='dbname'):
+        self.__date = date
+        self.__db_name = db_name
+        self.table_name = f'covid_data{self.__date}'
 
-    def __connect_to_db(db):
+    def store_data(self, data):
+        if self.__db_name is None:
+            self.__create_db()
+        self.__select_db()
+        self.__create_db_tables_keys()
+        table_schema = '(rank, Country,Other, TotalCases, NewCases, TotalDeaths, NewDeaths, TotalRecovered, NewRecovered, ActiveCases, Serious,Critical, Tot Cases/1M pop, Deaths/1M pop, TotalTests, Tests/1M pop, Population, Continent, 1 Caseevery X ppl, 1 Deathevery X ppl, 1 Testevery X ppl)'
+        self.__populate_table(self.table_name, table_schema)
+
+    def __connect_to_db(self):
         try:
-            if db is not None:
+            if self.__db_name is not None:
                 return connect(
                     host="localhost",
                     user=os.environ.get('DB_USER'),  # Used PyCharm environment variables.
                     password=os.environ.get('DB_PASS'),  # Used PyCharm environment variables.
-                    database=db,
+                    database=self.__db_name,
                 )
             else:
                 return connect(
@@ -25,18 +32,77 @@ class CreateDatabase:
                     user=os.environ.get('DB_USER'),  # Used PyCharm environment variables.
                     password=os.environ.get('DB_PASS'),  # Used PyCharm environment variables.
                 )
-        except Error as err:
-            print('There as a problem with the db: {}'.format(err))
+        except Error as e:
+            print(e)
 
-    def create_db(self, dbName):
+    def __create_db(self):
         try:
-            self.__dbConn.cursor().execute(f'CREATE DATABASE {dbName}')
-        except Error as err:
-            print('There as a problem with the db: {}'.format(err))
+            connection = self.__connect_to_db(None)
+            create_db_query = f'CREATE DATABASE {self.__db_name}'
+            with connection.cursor() as cursor:
+                cursor.execute(create_db_query)
+        except Error as e:
+            print(e)
 
-    def create_table(self, table_name, table_schema):
+    def __select_db(self):
         try:
-            self.__dbConn.cursor().execute(f'CREATE TABLE {table_name} {table_schema}')
-            self.__dbConn.commit()
-        except Error as err:
-            print('There as a problem with the db: {}'.format(err))
+            connection = self.__connect_to_db(None)
+            use_db_query = f'USE {self.__db_name}'
+            with connection.cursor() as cursor:
+                cursor.execute(use_db_query)
+                result = cursor.fetchall()
+                for table in result:
+                    print(table)
+        except Error as e:
+            print(e)
+
+    def __create_table(self, table_name, table_schema):
+        try:
+            connection = self.__connect_to_db(self.__db_name)
+            create_table_query = f'CREATE TABLE {table_name}{table_schema}'
+            with connection.cursor() as cursor:
+                cursor.execute(create_table_query)
+                connection.commit()
+        except Error as e:
+            print(e)
+
+    def __populate_table(self, table_name, table_schema):
+        try:
+            connection = self.__connect_to_db(self.__db_name)
+            insert_values_query = f"""
+                INSERT INTO {table_name}
+                {table_schema}
+                VALUES ( %s{', %s' * table_schema.count(',')} )
+                """
+            with connection.cursor() as cursor:
+                cursor.executemany(insert_values_query, self.__data)
+                connection.commit()
+        except Error as e:
+            print(e)
+
+    def __create_db_tables_keys(self):
+        self.__create_db('customer_order')
+        table_name = f'covid_data{self.__date}'
+        table_schema = """(
+            `rank int(3)` NOT NULL,
+            `Country,Other` varchar(50) NOT NULL PRIMARY KEY,
+            `TotalCases` int(10) DEFAULT NULL,
+            `NewCases` int(10) DEFAULT NULL,
+            `TotalDeaths` int(10) DEFAULT NULL,
+            `NewDeaths` int(10) DEFAULT NULL,
+            `TotalRecovered` int(10) DEFAULT NULL,
+            `NewRecovered` int(10) DEFAULT NULL,
+            `ActiveCases` int(10) DEFAULT NULL,
+            `Serious,Critical` int(10) DEFAULT NULL,
+            `Tot Cases/1M pop` decimal(10,1) DEFAULT NULL,
+            `Deaths/1M pop` decimal(10,1) DEFAULT NULL,
+            `TotalTests` int(10) DEFAULT NULL,
+            `Tests/1M pop` int(10) DEFAULT NULL,
+            `Population` int(10) DEFAULT NULL,
+            `Continent` varchar(50) NOT NULL,
+            `1 Caseevery X ppl` int(10) DEFAULT NULL,
+            `1 Deathevery X ppl` int(10) DEFAULT NULL,
+            `1 Testevery X ppl` int(10) DEFAULT NULL
+        )
+        """
+        self.__create_table(table_name, table_schema)
