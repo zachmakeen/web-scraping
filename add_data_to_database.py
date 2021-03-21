@@ -54,14 +54,14 @@ class CreateDatabase:
 
     def __create_table(self, table_name, table_schema):
         try:
-            self.__connection.cursor().execute(f'CREATE TABLE {table_name} {table_schema}')
+            self.__connection.cursor().execute(f'CREATE TABLE `{table_name}` {table_schema}')
             self.__connection.commit()
         except Error as err:
             print('There as a problem with the db: {}'.format(err))
 
     def __populate_table(self, table_name, data):
         str_form = ",%s" * (len(data[0]) - 1)
-        statement = f'INSERT INTO {table_name} {self.__table_schema} VALUES (%s {str_form})'
+        statement = f'INSERT INTO `{table_name}` {self.__table_schema} VALUES (%s {str_form})'
         try:
             mycursor = self.__connection.cursor()
             mycursor.executemany(statement, data)
@@ -78,7 +78,7 @@ class CreateDatabase:
 
         self.__table_name = f'covid_data{self.__date}'
         table_schema = """(
-            `rank` decimal() NOT NULL,
+            `rank` decimal(1) NOT NULL,
             `Country,Other` varchar(50) NOT NULL,
             `TotalCases` decimal(10) DEFAULT NULL,
             `NewCases` decimal(10) DEFAULT NULL,
@@ -98,8 +98,7 @@ class CreateDatabase:
             `1 Deathevery X ppl` decimal(10) DEFAULT NULL,
             `1 Testevery X ppl` decimal(10) DEFAULT NULL,
             PRIMARY KEY (`Country,Other`)
-        )
-        """
+        )"""
         self.__create_table(self.__table_name, table_schema)
 
     def __closeDatabase(self):
