@@ -4,18 +4,20 @@ import os
 
 class CreateDatabase:
 
-    def __init__(self, date, db_name='dbname'):
+    def __init__(self, date):
         self.__date = date
-        self.__db_name = db_name
+        self.__db_name = 'covid_corona_db_MAKE_RIVA'
         self.table_name = f'covid_data{self.__date}'
+        self.__connection = self.__connect_to_db()
+        self.__data = None
 
     def store_data(self, data):
-        if self.__db_name is None:
-            self.__create_db()
-        self.__select_db()
-        self.__create_db_tables_keys()
+        self.__create_db()
+        self.__data = data
+        # self.__select_db()
+        # self.__create_db_tables_keys()
         table_schema = '(rank, Country,Other, TotalCases, NewCases, TotalDeaths, NewDeaths, TotalRecovered, NewRecovered, ActiveCases, Serious,Critical, Tot Cases/1M pop, Deaths/1M pop, TotalTests, Tests/1M pop, Population, Continent, 1 Caseevery X ppl, 1 Deathevery X ppl, 1 Testevery X ppl)'
-        self.__populate_table(self.table_name, table_schema)
+        # self.__populate_table(self.table_name, table_schema)
 
     def __connect_to_db(self):
         try:
@@ -37,18 +39,19 @@ class CreateDatabase:
 
     def __create_db(self):
         try:
-            connection = self.__connect_to_db(None)
-            create_db_query = f'CREATE DATABASE {self.__db_name}'
-            with connection.cursor() as cursor:
-                cursor.execute(create_db_query)
+            # connection = self.__connect_to_db()
+            # create_db_query = f'CREATE DATABASE {self.__db_name}'
+            # with self.__connection.cursor() as cursor:
+            #     cursor.execute(create_db_query)
+            self.__connection.cursor().execute(f'CREATE DATABASE {self.__db_name}')
         except Error as e:
             print(e)
 
     def __select_db(self):
         try:
-            connection = self.__connect_to_db(None)
+            # connection = self.__connect_to_db()
             use_db_query = f'USE {self.__db_name}'
-            with connection.cursor() as cursor:
+            with self.__connection.cursor() as cursor:
                 cursor.execute(use_db_query)
                 result = cursor.fetchall()
                 for table in result:
@@ -58,30 +61,30 @@ class CreateDatabase:
 
     def __create_table(self, table_name, table_schema):
         try:
-            connection = self.__connect_to_db(self.__db_name)
+            # connection = self.__connect_to_db()
             create_table_query = f'CREATE TABLE {table_name}{table_schema}'
-            with connection.cursor() as cursor:
+            with self.__connection.cursor() as cursor:
                 cursor.execute(create_table_query)
-                connection.commit()
+                self.__connection.commit()
         except Error as e:
             print(e)
 
     def __populate_table(self, table_name, table_schema):
         try:
-            connection = self.__connect_to_db(self.__db_name)
+            # connection = self.__connect_to_db()
             insert_values_query = f"""
                 INSERT INTO {table_name}
                 {table_schema}
                 VALUES ( %s{', %s' * table_schema.count(',')} )
                 """
-            with connection.cursor() as cursor:
+            with self.__connection.cursor() as cursor:
                 cursor.executemany(insert_values_query, self.__data)
-                connection.commit()
+                self.__connection.commit()
         except Error as e:
             print(e)
 
     def __create_db_tables_keys(self):
-        self.__create_db('customer_order')
+        self.__create_db()
         table_name = f'covid_data{self.__date}'
         table_schema = """(
             `rank int(3)` NOT NULL,

@@ -80,7 +80,8 @@ quit - to end the program
             print(error)
 
     def __parse_html(self):
-        with open(f"local_html/local_file{self.__current_year}-{self.__current_month}-{self.__user_day}.html", encoding="utf-8") as html:
+        print(f"local_html/local_file{self.__current_year}-{datetime.datetime.now().strftime('%m')}-{self.__user_day}.html")
+        with open(f"local_html/local_file{self.__current_year}-{datetime.datetime.now().strftime('%m')}-{self.__user_day}.html", encoding="utf-8") as html:
             return BeautifulSoup(html.read(), "html.parser")
 
     def __generate_data_list(self, table_row_list):
