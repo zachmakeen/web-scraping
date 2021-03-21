@@ -25,5 +25,5 @@ from add_data_to_database import CreateDatabase
 data_object = ScrapeAndSaveData()
 # print(data_object.get_today_data())
 # data_object.console_interaction()
-CreateDatabase(data_object)
+# CreateDatabase(data_object)
 

@@ -32,6 +32,9 @@ class ScrapeAndSaveData:
         today_data = self.__generate_data_list(soup.find(id='main_table_countries_today'))
         yesterday_data = self.__generate_data_list(soup.find(id='main_table_countries_yesterday'))
         yesterday2_data = self.__generate_data_list(soup.find(id='main_table_countries_yesterday2'))
+        # connecting to database
+        # db_obj = CreateDatabase()
+
         today_table = CreateDatabase(today_date)
         yesterday_table = CreateDatabase(yesterday_date)
         yesterday2_table = CreateDatabase(yesterday2_date)
@@ -58,6 +61,8 @@ quit - to end the program
                 today_data = self.__generate_data_list(soup.find(id='main_table_countries_today'))
                 yesterday_data = self.__generate_data_list(soup.find(id='main_table_countries_yesterday'))
                 yesterday2_data = self.__generate_data_list(soup.find(id='main_table_countries_yesterday2'))
+                # connecting to database
+                # db_obj =CreateDatabase()
                 today_table = CreateDatabase(today_date)
                 yesterday_table = CreateDatabase(yesterday_date)
                 yesterday2_table = CreateDatabase(yesterday2_date)
