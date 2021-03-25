@@ -19,3 +19,11 @@ scrape_save_data
 explore_analyze_data
 - ExploreAnalyzeData()
 
+    extract_data
+    - ExtractData()
+
+    explore_data
+    - ExploreData()
+
+    plot_data
+    - PlotData()

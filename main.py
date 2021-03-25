@@ -1,4 +1,5 @@
 from scrape_save_data import ScrapeSaveData
+from explore_analyze_data import ExploreAnalyzeData
 
 
 # print('''
@@ -27,5 +28,8 @@ from scrape_save_data import ScrapeSaveData
 
 # ssd_object = ScrapeSaveData()
 # ssd_object.interact()
+
+ead_object = ExploreAnalyzeData()
+# ead_object.interact()
 
 

@@ -7,9 +7,9 @@ class DatabaseAPI:
         self.__db_name = db_name
         self.__init_connection = self.__create_init_connection()
         self.create_db()
-        self.__connection = self.__create_connection()
+        self.__connection = self.create_connection()
 
-    def __create_connection(self):
+    def create_connection(self):
         try:
             if self.__db_name is not None:
                 return connect(
