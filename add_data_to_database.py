@@ -59,8 +59,14 @@ class CreateDatabase:
             print('There as a problem with the db: {}'.format(err))
 
     def __populate_table(self, table_name, data):
-        str_form = ",%s" * (len(data[0]) - 1)
-        statement = f'INSERT INTO `{table_name}` VALUES (%s {str_form})'
+        statement = ''
+        print(table_name)
+        print(type(data[0]))
+        if table_name != 'country':
+            str_form = ",%s" * (len(data[0]) - 1)
+            statement = f'INSERT INTO `{table_name}` VALUES (%s {str_form})'
+        else:
+            statement = f'INSERT INTO `{table_name}` VALUES (%s)'
         try:
             mycursor = self.__connection.cursor()
             mycursor.executemany(statement, data)
@@ -97,13 +103,23 @@ class CreateDatabase:
             `1 Caseevery X ppl` int(10) DEFAULT NULL,
             `1 Deathevery X ppl` int(10) DEFAULT NULL,
             `1 Testevery X ppl` int(10) DEFAULT NULL,
-            PRIMARY KEY (`Country,Other`, `Date`))"""
-        else:
+            PRIMARY KEY (`Country,Other`, `Date`)
+            FOREIGN KEY (`Country,Other`) REFERENCES COUNTRY(`Country,Other`)"""
+        elif self.__table_name == 'corona_table':
             table_schema = """(
             `Country,Other` varchar(50) NOT NULL,
             `Neighbour` varchar(50) NOT NULL,
-            `Distance` int (10) DEFAULT NULL),
-            PRIMARY KEY (`Country,Other`, `Neighbour`))"""
+            `Distance` int (10) DEFAULT NULL,
+            PRIMARY KEY (`Country,Other`, `Neighbour`),
+            FOREIGN KEY (`Country,Other`) REFERENCES COUNTRY(`Country,Other`),
+            FOREIGN KEY (`Neighbour`) REFERENCES COUNTRY(`Neighbour`)
+            )"""
+        else:
+            table_schema = """(
+                        `Country,Other` VARCHAR(50) NOT NULL,
+                        PRIMARY KEY (`Country,Other`)
+                        )"""
+
         self.__create_table(self.__table_name, table_schema)
 
 

@@ -14,6 +14,7 @@ class ScrapeAndSaveData:
         self.__current_year = current_year
         self.__current_month = current_month
         self.__user_day = None
+        self.__countries = []
 
         # Save file locally
 
@@ -21,22 +22,27 @@ class ScrapeAndSaveData:
 
         # Scrape local file
 
-        # self.__user_day = int(input('Enter the day in digits to scrape your local file (e.g. 05): '))
-        # today_date = str(datetime.datetime(self.__current_year, self.__current_month, self.__user_day).date())
-        # yesterday_date = str(
-        #     datetime.datetime(self.__current_year, self.__current_month, self.__user_day).date() - datetime.timedelta(
-        #         days=1))
-        # yesterday2_date = str(
-        #     datetime.datetime(self.__current_year, self.__current_month, self.__user_day).date() - datetime.timedelta(
-        #         days=2))
-        # soup = self.__parse_html()
-        # today_data = self.__generate_data_list(soup.find(id='main_table_countries_today'), today_date)
-        # yesterday_data = self.__generate_data_list(soup.find(id='main_table_countries_yesterday'), yesterday_date)
-        # yesterday2_data = self.__generate_data_list(soup.find(id='main_table_countries_yesterday2'), yesterday2_date)
-        # all_data = today_data + yesterday_data + yesterday2_data
-        # db_obj = CreateDatabase()
+        self.__user_day = int(input('Enter the day in digits to scrape your local file (e.g. 05): '))
+        today_date = str(datetime.datetime(self.__current_year, self.__current_month, self.__user_day).date())
+        yesterday_date = str(
+            datetime.datetime(self.__current_year, self.__current_month, self.__user_day).date() - datetime.timedelta(
+                days=1))
+        yesterday2_date = str(
+            datetime.datetime(self.__current_year, self.__current_month, self.__user_day).date() - datetime.timedelta(
+                days=2))
+        soup = self.__parse_html()
+        today_data = self.__generate_data_list(soup.find(id='main_table_countries_today'), today_date)
+        yesterday_data = self.__generate_data_list(soup.find(id='main_table_countries_yesterday'), yesterday_date)
+        yesterday2_data = self.__generate_data_list(soup.find(id='main_table_countries_yesterday2'), yesterday2_date)
+        all_data = today_data + yesterday_data + yesterday2_data
+        json_data = self.__parse_json()
+        db_obj = CreateDatabase()
+        for i in self.__countries:
+            print(i)
+        db_obj.store_data(self.__countries, 'country')
+        # db_obj.store_data(json_data, 'country_borders_table')
         # db_obj.store_data(all_data, 'corona_table')
-        self.__parse_json()
+
 
     def console_interaction(self):
         print("""
@@ -85,8 +91,10 @@ quit - to end the program
         with open('countries_json/country_neighbour_dist_file.json') as f:
             data = json.load(f)
             temp_list = []
+            countries_list = []
             for i in data:
                 country_data = list(i.values())[0]
+                self.__countries.append((list(i.keys())[0]))
                 neighbor_num = len(list(country_data.keys()))
                 for j in range(neighbor_num):
                     country_name = list(i.keys())[0]
