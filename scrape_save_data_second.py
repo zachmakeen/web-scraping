@@ -86,12 +86,14 @@ quit - to end the program
             data = json.load(f)
             temp_list = []
             for i in data:
-                countries = list(i.values())[0]
-                num_countries = (len(list(countries.keys())))
-                for j in range(num_countries):
-                    temp_tuple = [list(i.keys())[0], list(countries.keys())[j], list(countries.values())[j]]
-                    temp_list.append(tuple(temp_tuple))
-            print(temp_list)
+                country_data = list(i.values())[0]
+                neighbor_num = len(list(country_data.keys()))
+                for j in range(neighbor_num):
+                    country_name = list(i.keys())[0]
+                    neighbor = list(country_data.keys())[j]
+                    distance = list(country_data.values())[j]
+                    temp_tuple = (country_name, neighbor, distance)
+                    temp_list.append(temp_tuple)
             return temp_list
 
     def __generate_data_list(self, table_row_list, date):
