@@ -1,29 +1,31 @@
 from scrape_save_data import ScrapeSaveData
-from add_data_to_database import CreateDatabase
 
 
-# print('Type "help" to see more commands')
+# print('''
+# s - to save and/or scrape data
+# a - to analyse data
+# quit - to end the program
+# ''')
 # command = ''
 # while True:
 #     command = input('> ').lower()
 #     if command == 'help':
 #         print('''
-#         scrape - to scrape data
-#         analyse - to analyse data
-#         quit - to end the program
+# s - to save and/or scrape data
+# a - to analyse data
+# quit - to end the program
 #         ''')
-#     elif command == 'scrape':
-#         ScrapeData()
-#         CreateDatabase()
-#     elif command == 'analyse':
+#     elif command == 's':
+#         ssd_object = ScrapeSaveData()
+#         ssd_object.interact()
+#     elif command == 'a':
 #         pass
 #     elif command == 'quit':
 #         break
 #     else:
 #         print('Sorry, that is not a valid command.')
 
-ScrapeSaveData()
-# print(data_object.get_today_data())
-# data_object.console_interaction()
-# CreateDatabase(data_object)
+# ssd_object = ScrapeSaveData()
+# ssd_object.interact()
+
 

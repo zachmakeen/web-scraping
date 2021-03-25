@@ -40,6 +40,7 @@ class CleanData:
                 distance = list(country_data.values())[i]
                 temp_tuple = (country_name, neighbor, distance)
                 temp_list.append(temp_tuple)
+        temp_list.pop(297)
         return temp_list
 
     def generate_country_list(self):

@@ -16,3 +16,6 @@ scrape_save_data
         database_api
         - DatabaseAPI()
 
+explore_analyze_data
+- ExploreAnalyzeData()
+

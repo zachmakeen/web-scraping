@@ -40,7 +40,8 @@ class ManageDatabase:
         table_schema = """(
             `Country,Other` varchar(50) NOT NULL,
             `Neighbour` varchar(50) NOT NULL,
-            `Distance` int (10) DEFAULT NULL
+            `Distance` int (10) DEFAULT NULL,
+            PRIMARY KEY (`Country,Other`, `Neighbour`)
         )
         """
         self.__db_api.select_db()
