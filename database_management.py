@@ -6,7 +6,7 @@ class ManageDatabase:
         self.__db_api = DatabaseAPI('covid_corona_db_MAKE_RIVA')
 
     def add_covid_records(self, covid_records):
-        table_name = 'covid_data'
+        table_name = 'corona_table'
         table_schema = """(
             `Date` date NOT NULL,
             `Rank` int(3) NOT NULL,
@@ -36,7 +36,7 @@ class ManageDatabase:
         self.__db_api.populate_table(table_name, covid_records)
 
     def add_border_records(self, border_records):
-        table_name = 'country_borders'
+        table_name = 'country_borders_table'
         table_schema = """(
             `Country,Other` varchar(50) NOT NULL,
             `Neighbour` varchar(50) NOT NULL,
