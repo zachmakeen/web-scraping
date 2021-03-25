@@ -7,9 +7,12 @@ from bs4 import BeautifulSoup
 
 
 class ScrapeAndSaveData:
-    def __init__(self, url='https://www.worldometers.info/coronavirus/', current_date=str(datetime.date.today()), current_year=int(datetime.datetime.now().strftime('%Y')), current_month=int(datetime.datetime.now().strftime('%m')), headers=['#', 'Country, Other', 'Total Cases', 'New Cases', 'Total Deaths', 'New Deaths',
-                          'Total Recovered', 'Active Cases', 'Serious, Critical', 'Tot Cases/1M pop', 'Deaths/1M pop',
-                          'Total Tests', 'Tests/1M pop', 'Population']):
+    def __init__(self, url='https://www.worldometers.info/coronavirus/', current_date=str(datetime.date.today()), current_year=int(datetime.datetime.now().strftime('%Y')), current_month=int(datetime.datetime.now().strftime('%m')),
+                 headers=None):
+        if headers is None:
+            headers = ['#', 'Country, Other', 'Total Cases', 'New Cases', 'Total Deaths', 'New Deaths',
+                       'Total Recovered', 'Active Cases', 'Serious, Critical', 'Tot Cases/1M pop', 'Deaths/1M pop',
+                       'Total Tests', 'Tests/1M pop', 'Population']
         self.__url = url
         self.__current_date = current_date
         self.__current_year = current_year
@@ -95,6 +98,7 @@ quit - to end the program
             for table_entry in table_entry_list:
                 temp_table_row.append(self.__clean_table_entry(table_entry.text))
             temp_table_row.pop(7)
+            print(temp_table_row)
             clean_data.append(temp_table_row)
         return clean_data[8:-8]
 

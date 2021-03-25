@@ -16,7 +16,7 @@ class ScrapeAndSaveData:
 
         # Save file locally
 
-        # self.__download_html()
+        #self.__download_html()
 
         # Scrape local file
 
@@ -105,12 +105,11 @@ quit - to end the program
         return clean_data[8:-8]
 
     def __clean_table_entry(self, table_entry):
-        table_entry = re.sub(r'\n|\+|\s{2,}|,', '', table_entry)
+        table_entry = re.sub(r'\n|\+|\s{2,}|,|N/A', '', table_entry)
         if table_entry == '':
             return None
-        elif type(table_entry) is float:
-            return float(table_entry)
-        elif type(table_entry) is int:
+        elif re.match(r'^\d+$', table_entry):
             return int(table_entry)
         else:
             return table_entry
+
