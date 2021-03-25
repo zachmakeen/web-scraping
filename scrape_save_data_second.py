@@ -22,23 +22,21 @@ class ScrapeAndSaveData:
 
         # Scrape local file
 
-        self.__user_day = int(input('Enter the day in digits to scrape your local file (e.g. 05): '))
-        today_date = str(datetime.datetime(self.__current_year, self.__current_month, self.__user_day).date())
-        yesterday_date = str(
-            datetime.datetime(self.__current_year, self.__current_month, self.__user_day).date() - datetime.timedelta(
-                days=1))
-        yesterday2_date = str(
-            datetime.datetime(self.__current_year, self.__current_month, self.__user_day).date() - datetime.timedelta(
-                days=2))
-        soup = self.__parse_html()
-        today_data = self.__generate_data_list(soup.find(id='main_table_countries_today'), today_date)
-        yesterday_data = self.__generate_data_list(soup.find(id='main_table_countries_yesterday'), yesterday_date)
-        yesterday2_data = self.__generate_data_list(soup.find(id='main_table_countries_yesterday2'), yesterday2_date)
-        all_data = today_data + yesterday_data + yesterday2_data
+        # self.__user_day = int(input('Enter the day in digits to scrape your local file (e.g. 05): '))
+        # today_date = str(datetime.datetime(self.__current_year, self.__current_month, self.__user_day).date())
+        # yesterday_date = str(
+        #     datetime.datetime(self.__current_year, self.__current_month, self.__user_day).date() - datetime.timedelta(
+        #         days=1))
+        # yesterday2_date = str(
+        #     datetime.datetime(self.__current_year, self.__current_month, self.__user_day).date() - datetime.timedelta(
+        #         days=2))
+        # soup = self.__parse_html()
+        # today_data = self.__generate_data_list(soup.find(id='main_table_countries_today'), today_date)
+        # yesterday_data = self.__generate_data_list(soup.find(id='main_table_countries_yesterday'), yesterday_date)
+        # yesterday2_data = self.__generate_data_list(soup.find(id='main_table_countries_yesterday2'), yesterday2_date)
+        # all_data = today_data + yesterday_data + yesterday2_data
         json_data = self.__parse_json()
         db_obj = CreateDatabase()
-        for i in self.__countries:
-            print(i)
         db_obj.store_data(self.__countries, 'country')
         # db_obj.store_data(json_data, 'country_borders_table')
         # db_obj.store_data(all_data, 'corona_table')
@@ -72,20 +70,20 @@ quit - to end the program
             else:
                 print('Sorry, that is not a valid command.')
 
-    def __download_html(self):
-        try:
-            request = Request(self.__url, headers={'User-Agent': 'Mozilla/5.0'})
-            html = urlopen(request).read().decode("utf-8")
-            soup = BeautifulSoup(html, "html.parser")
-            with open("local_html/" + f"local_file{self.__current_date}.html", "w", encoding="utf-8") as file:
-                file.write(soup.prettify())
-        except urllib.error.HTTPError as error:
-            print(error)
+    # def __download_html(self):
+    #     try:
+    #         request = Request(self.__url, headers={'User-Agent': 'Mozilla/5.0'})
+    #         html = urlopen(request).read().decode("utf-8")
+    #         soup = BeautifulSoup(html, "html.parser")
+    #         with open("local_html/" + f"local_file{self.__current_date}.html", "w", encoding="utf-8") as file:
+    #             file.write(soup.prettify())
+    #     except urllib.error.HTTPError as error:
+    #         print(error)
 
-    def __parse_html(self):
-        print(f"local_html/local_file{self.__current_year}-{datetime.datetime.now().strftime('%m')}-{self.__user_day}.html")
-        with open(f"local_html/local_file{self.__current_year}-{datetime.datetime.now().strftime('%m')}-{self.__user_day}.html", encoding="utf-8") as html:
-            return BeautifulSoup(html.read(), "html.parser")
+    # def __parse_html(self):
+    #     print(f"local_html/local_file{self.__current_year}-{datetime.datetime.now().strftime('%m')}-{self.__user_day}.html")
+    #     with open(f"local_html/local_file{self.__current_year}-{datetime.datetime.now().strftime('%m')}-{self.__user_day}.html", encoding="utf-8") as html:
+    #         return BeautifulSoup(html.read(), "html.parser")
 
     def __parse_json(self):
         with open('countries_json/country_neighbour_dist_file.json') as f:

@@ -5,7 +5,7 @@ import os
 class CreateDatabase:
 
     def __init__(self):
-        self.__db_name = None  # 'covid_corona_db_MAKE_RIVA'
+        self.__db_name = 'covid_corona_db_MAKE_RIVA'
         self.__connection = self.__connect_to_db()
         # self.table_name = f'covid_data{self.__date}'
         # self.__table_schema = '(`rank`, `Country,Other`, `TotalCases`, `NewCases`, `TotalDeaths`, `NewDeaths`, `TotalRecovered`, `ActiveCases`, `Serious,Critical`, `Tot Cases/1M pop`, `Deaths/1M pop`, `TotalTests`, `Tests/1M pop`, `Population`, `Continent`, `1 Caseevery X ppl`, `1 Deathevery X ppl`, `1 Testevery X ppl`)'
@@ -13,12 +13,13 @@ class CreateDatabase:
         self.__table_name = None
 
     def store_data(self, data, table):
-        #     self.__create_db()
-        #     self.__data = data
+        # self.__create_db()
+        self.__data = data
         self.__table_name = table
+        self.__select_db()
         self.__create_db_tables_keys()
-        self.__populate_table(self.__table_name, data)
-        self.__closeDatabase()
+        # self.__populate_table(data)
+        # self.__closeDatabase()
 
     def __connect_to_db(self):
         try:
@@ -27,7 +28,7 @@ class CreateDatabase:
                     host="localhost",
                     user=os.environ.get('DB_USER'),  # Used PyCharm environment variables.
                     password=os.environ.get('DB_PASS'),  # Used PyCharm environment variables.
-                    # database=self.__db_name,
+                    database=self.__db_name
                 )
             else:
                 return connect(
@@ -44,10 +45,10 @@ class CreateDatabase:
         except Error as err:
             print('There as a problem with the db: {}'.format(err))
 
-    def __select_db(self, selected_db):
+    def __select_db(self):
         mycursor = self.__connection.cursor()
         try:
-            mycursor.execute(f'USE {selected_db};')
+            mycursor.execute(f'USE {self.__db_name};')
         except Error as err:
             print('There as a problem with the db: {}'.format(err))
 
@@ -58,28 +59,23 @@ class CreateDatabase:
         except Error as err:
             print('There as a problem with the db: {}'.format(err))
 
-    def __populate_table(self, table_name, data):
-        statement = ''
-        print(table_name)
+    def __populate_table(self, data):
+        print(self.__table_name)
         print(type(data[0]))
-        if table_name != 'country':
+        if self.__table_name != 'country':
             str_form = ",%s" * (len(data[0]) - 1)
-            statement = f'INSERT INTO `{table_name}` VALUES (%s {str_form})'
+            statement = f'INSERT INTO `{self.__table_name}` VALUES (%s {str_form})'
         else:
-            statement = f'INSERT INTO `{table_name}` VALUES (%s)'
+            statement = f'INSERT INTO `{self.__table_name}` VALUES (%s)'
         try:
-            mycursor = self.__connection.cursor()
-            mycursor.executemany(statement, data)
+            my_cursor = self.__connection.cursor()
+            my_cursor.executemany(statement, data)
             print('database with tables and data created succesfully')
             self.__connection.commit()
-
         except Error as err:
             print('There as a problem with the db: {}'.format(err))
 
     def __create_db_tables_keys(self):
-        self.__db_name = 'covid_corona_db_MAKE_RIVA'
-        self.__create_db()
-        self.__select_db(self.__db_name)
         table_schema = ''
         if self.__table_name == 'corona_table':
             table_schema = """(

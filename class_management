@@ -1,0 +1,12 @@
+scrape_save_data
+- ScrapeSaveData()
+
+    save_file
+    - SaveFile(url)
+
+    scrape_file
+    - ScrapeFile(date)
+
+    clean_data
+    - CleanData(html_soup, json_list)
+

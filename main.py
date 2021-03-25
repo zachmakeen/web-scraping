@@ -1,4 +1,4 @@
-from scrape_save_data_second import ScrapeAndSaveData
+from scrape_save_data import ScrapeSaveData
 from add_data_to_database import CreateDatabase
 
 
@@ -22,7 +22,7 @@ from add_data_to_database import CreateDatabase
 #     else:
 #         print('Sorry, that is not a valid command.')
 
-data_object = ScrapeAndSaveData()
+ScrapeSaveData()
 # print(data_object.get_today_data())
 # data_object.console_interaction()
 # CreateDatabase(data_object)
