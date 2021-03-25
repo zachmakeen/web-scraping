@@ -9,10 +9,7 @@ class CreateDatabase:
         self.__db_name = None  # 'covid_corona_db_MAKE_RIVA'
         self.__connection = self.__connect_to_db()
         # self.table_name = f'covid_data{self.__date}'
-        self.__table_schema = '(`rank`, `Country,Other`, `TotalCases`, `NewCases`, `TotalDeaths`, `NewDeaths`, ' \
-                              '`TotalRecovered`, `ActiveCases`, `Serious,Critical`, `Tot Cases/1M ' \
-                              'pop`, `Deaths/1M pop`, `TotalTests`, `Tests/1M pop`, `Population`, `Continent`, ' \
-                              '`1 Caseevery X ppl`, `1 Deathevery X ppl`, `1 Testevery X ppl`) '
+        self.__table_schema = '(rank, Country,Other, TotalCases, NewCases, TotalDeaths, NewDeaths, TotalRecovered, NewRecovered, ActiveCases, Serious,Critical, Tot Cases/1M pop, Deaths/1M pop, TotalTests, Tests/1M pop, Population, Continent, 1 Caseevery X ppl, 1 Deathevery X ppl, 1 Testevery X ppl)'
         self.__data = None
         self.__table_name = None
 
@@ -81,26 +78,29 @@ class CreateDatabase:
 
         self.__table_name = f'covid_data{self.__date}'
         table_schema = """(
-            `rank` int(3) NOT NULL,
+            `rank` decimal(1) NOT NULL,
             `Country,Other` varchar(50) NOT NULL,
-            `TotalCases` int(10) DEFAULT NULL,
-            `NewCases` int(10) DEFAULT NULL,
-            `TotalDeaths` int(10) DEFAULT NULL,
-            `NewDeaths` int(10) DEFAULT NULL,
-            `TotalRecovered` int(10) DEFAULT NULL,
-            `ActiveCases` int(10) DEFAULT NULL,
-            `Serious,Critical` int(10) DEFAULT NULL,
-            `Tot Cases/1M pop` int(10) DEFAULT NULL,
-            `Deaths/1M pop` int(10) DEFAULT NULL,
-            `TotalTests` int(10) DEFAULT NULL,
-            `Tests/1M pop` int(10) DEFAULT NULL,
-            `Population` int(10) DEFAULT NULL,
-            `Continent` varchar(50) DEFAULT NULL,
-            `1 Caseevery X ppl` int(10) DEFAULT NULL,
-            `1 Deathevery X ppl` int(10) DEFAULT NULL,
-            `1 Testevery X ppl` int(10) DEFAULT NULL,
-            PRIMARY KEY (`Country,Other`))"""
+            `TotalCases` decimal(10) DEFAULT NULL,
+            `NewCases` decimal(10) DEFAULT NULL,
+            `TotalDeaths` decimal(10) DEFAULT NULL,
+            `NewDeaths` decimal(10) DEFAULT NULL,
+            `TotalRecovered` decimal(10) DEFAULT NULL,
+            `NewRecovered` decimal(10) DEFAULT NULL,
+            `ActiveCases` decimal(10) DEFAULT NULL,
+            `Serious,Critical` decimal(10) DEFAULT NULL,
+            `Tot Cases/1M pop` decimal(10,1) DEFAULT NULL,
+            `Deaths/1M pop` decimal(10,1) DEFAULT NULL,
+            `TotalTests` decimal(10) DEFAULT NULL,
+            `Tests/1M pop` decimal(10) DEFAULT NULL,
+            `Population` decimal(10) DEFAULT NULL,
+            `Continent` varchar(50) NOT NULL,
+            `1 Caseevery X ppl` decimal(10) DEFAULT NULL,
+            `1 Deathevery X ppl` decimal(10) DEFAULT NULL,
+            `1 Testevery X ppl` decimal(10) DEFAULT NULL,
+            PRIMARY KEY (`Country,Other`)
+        )"""
         self.__create_table(self.__table_name, table_schema)
 
     def __closeDatabase(self):
         self.__connection.close()
+
