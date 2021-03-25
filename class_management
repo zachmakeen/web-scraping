@@ -10,3 +10,9 @@ scrape_save_data
     clean_data
     - CleanData(html_soup, json_list)
 
+    database_management
+    - ManageDatabase()
+
+        database_api
+        - DatabaseAPI()
+

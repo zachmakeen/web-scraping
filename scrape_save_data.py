@@ -3,6 +3,7 @@ import datetime
 from save_file import SaveFile
 from scrape_file import ScrapeFile
 from clean_data import CleanData
+from database_management import ManageDatabase
 
 
 class ScrapeSaveData:
@@ -27,3 +28,8 @@ class ScrapeSaveData:
         yesterday2_data = clean_object.generate_covid_list('main_table_countries_yesterday2', str(user_date - datetime.timedelta(days=2)))
         country_border_data = clean_object.generate_border_list()
         # country_name_data = clean_object.generate_country_list()
+
+        # Create database with all the data
+        db_object = ManageDatabase()
+        db_object.add_covid_records(today_data + yesterday_data + yesterday2_data)
+        db_object.add_border_records(country_border_data)
