@@ -23,7 +23,7 @@ explore_analyze_data
     - ExtractData()
 
     explore_data
-    - ExploreData()
+    - ExploreData(corona_df, border_df)
 
     plot_data
     - PlotData()

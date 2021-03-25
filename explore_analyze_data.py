@@ -1,4 +1,6 @@
 from extract_data import ExtractData
+from explore_data import ExploreData
+from plot_data import PlotData
 
 
 class ExploreAnalyzeData:
@@ -8,3 +10,9 @@ class ExploreAnalyzeData:
         extract_object = ExtractData()
         corona_df = extract_object.get_corona_df()
         border_df = extract_object.get_border_df()
+
+        # Explore data
+        explore_object = ExploreData(corona_df, border_df)
+
+        # Plot data
+        plot_object = PlotData()
