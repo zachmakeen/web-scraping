@@ -85,42 +85,42 @@ quit - to end the program
     #     with open(f"local_html/local_file{self.__current_year}-{datetime.datetime.now().strftime('%m')}-{self.__user_day}.html", encoding="utf-8") as html:
     #         return BeautifulSoup(html.read(), "html.parser")
 
-    def __parse_json(self):
-        with open('countries_json/country_neighbour_dist_file.json') as f:
-            data = json.load(f)
-            temp_list = []
-            countries_list = []
-            for i in data:
-                country_data = list(i.values())[0]
-                self.__countries.append((list(i.keys())[0]))
-                neighbor_num = len(list(country_data.keys()))
-                for j in range(neighbor_num):
-                    country_name = list(i.keys())[0]
-                    neighbor = list(country_data.keys())[j]
-                    distance = list(country_data.values())[j]
-                    temp_tuple = (country_name, neighbor, distance)
-                    temp_list.append(temp_tuple)
-            return temp_list
-
-    def __generate_data_list(self, table_row_list, date):
-        data = self.__clean_table_row(table_row_list.find_all('tr'), date)
-        return data
-
-    def __clean_table_row(self, table_row_list, date):
-        clean_data = []
-        for table_row in table_row_list[1:]:
-            temp_table_row = [date]
-            table_entry_list = table_row.find_all('td')
-            for table_entry in table_entry_list:
-                temp_table_row.append(self.__clean_table_entry(table_entry.text))
-            clean_data.append(tuple(temp_table_row))
-        return clean_data[8:-8]
-
-    def __clean_table_entry(self, table_entry):
-        table_entry = re.sub(r'\n|\+|\s{2,}|,|N/A', '', table_entry)
-        if table_entry == '':
-            return None
-        elif re.match(r'^\d+$', table_entry):
-            return int(table_entry)
-        else:
-            return table_entry
+    # def __parse_json(self):
+    #     with open('countries_json/country_neighbour_dist_file.json') as f:
+    #         data = json.load(f)
+    #         temp_list = []
+    #         countries_list = []
+    #         for i in data:
+    #             country_data = list(i.values())[0]
+    #             self.__countries.append((list(i.keys())[0]))
+    #             neighbor_num = len(list(country_data.keys()))
+    #             for j in range(neighbor_num):
+    #                 country_name = list(i.keys())[0]
+    #                 neighbor = list(country_data.keys())[j]
+    #                 distance = list(country_data.values())[j]
+    #                 temp_tuple = (country_name, neighbor, distance)
+    #                 temp_list.append(temp_tuple)
+    #         return temp_list
+    #
+    # def __generate_data_list(self, table_row_list, date):
+    #     data = self.__clean_table_row(table_row_list.find_all('tr'), date)
+    #     return data
+    #
+    # def __clean_table_row(self, table_row_list, date):
+    #     clean_data = []
+    #     for table_row in table_row_list[1:]:
+    #         temp_table_row = [date]
+    #         table_entry_list = table_row.find_all('td')
+    #         for table_entry in table_entry_list:
+    #             temp_table_row.append(self.__clean_table_entry(table_entry.text))
+    #         clean_data.append(tuple(temp_table_row))
+    #     return clean_data[8:-8]
+    #
+    # def __clean_table_entry(self, table_entry):
+    #     table_entry = re.sub(r'\n|\+|\s{2,}|,|N/A', '', table_entry)
+    #     if table_entry == '':
+    #         return None
+    #     elif re.match(r'^\d+$', table_entry):
+    #         return int(table_entry)
+    #     else:
+    #         return table_entry
