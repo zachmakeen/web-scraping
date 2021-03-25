@@ -1,6 +1,7 @@
 import datetime
 import re
 import urllib
+import json
 from urllib.request import Request, urlopen
 from add_data_to_database import CreateDatabase
 from bs4 import BeautifulSoup
@@ -29,18 +30,13 @@ class ScrapeAndSaveData:
             datetime.datetime(self.__current_year, self.__current_month, self.__user_day).date() - datetime.timedelta(
                 days=2))
         soup = self.__parse_html()
-        today_data = self.__generate_data_list(soup.find(id='main_table_countries_today'))
-        yesterday_data = self.__generate_data_list(soup.find(id='main_table_countries_yesterday'))
-        yesterday2_data = self.__generate_data_list(soup.find(id='main_table_countries_yesterday2'))
-        # connecting to database
-        # db_obj = CreateDatabase()
-
-        today_table = CreateDatabase(today_date)
-        yesterday_table = CreateDatabase(yesterday_date)
-        yesterday2_table = CreateDatabase(yesterday2_date)
-        today_table.store_data(today_data)
-        yesterday_table.store_data(yesterday_data)
-        yesterday2_table.store_data(yesterday2_data)
+        today_data = self.__generate_data_list(soup.find(id='main_table_countries_today'), today_date)
+        yesterday_data = self.__generate_data_list(soup.find(id='main_table_countries_yesterday'), yesterday_date)
+        yesterday2_data = self.__generate_data_list(soup.find(id='main_table_countries_yesterday2'), yesterday2_date)
+        all_data = today_data + yesterday_data + yesterday2_data
+        db_obj = CreateDatabase()
+        db_obj.store_data(all_data, 'corona_table')
+        self.__parse_json()
 
     def console_interaction(self):
         print("""
@@ -58,17 +54,13 @@ quit - to end the program
                 yesterday_date = str(datetime.datetime(self.__current_year, self.__current_month, self.__user_day).date() - datetime.timedelta(days=1))
                 yesterday2_date = str(datetime.datetime(self.__current_year, self.__current_month, self.__user_day).date() - datetime.timedelta(days=2))
                 soup = self.__parse_html()
-                today_data = self.__generate_data_list(soup.find(id='main_table_countries_today'))
-                yesterday_data = self.__generate_data_list(soup.find(id='main_table_countries_yesterday'))
-                yesterday2_data = self.__generate_data_list(soup.find(id='main_table_countries_yesterday2'))
+                today_data = self.__generate_data_list(soup.find(id='main_table_countries_today'), today_date)
+                yesterday_data = self.__generate_data_list(soup.find(id='main_table_countries_yesterday'), yesterday_date)
+                yesterday2_data = self.__generate_data_list(soup.find(id='main_table_countries_yesterday2'), yesterday2_date)
+                all_data = today_data + yesterday_data + yesterday2_data
                 # connecting to database
-                # db_obj =CreateDatabase()
-                today_table = CreateDatabase(today_date)
-                yesterday_table = CreateDatabase(yesterday_date)
-                yesterday2_table = CreateDatabase(yesterday2_date)
-                today_table.store_data(today_data)
-                yesterday_table.store_data(yesterday_data)
-                yesterday2_table.store_data(yesterday2_data)
+                db_obj = CreateDatabase()
+                db_obj.store_data(all_data, 'corona_table')
             elif command == 'quit':
                 break
             else:
@@ -89,18 +81,22 @@ quit - to end the program
         with open(f"local_html/local_file{self.__current_year}-{datetime.datetime.now().strftime('%m')}-{self.__user_day}.html", encoding="utf-8") as html:
             return BeautifulSoup(html.read(), "html.parser")
 
-    def __generate_data_list(self, table_row_list):
-        data = self.__clean_table_row(table_row_list.find_all('tr'))
+    def __parse_json(self):
+        with open('countries_json/country_neighbour_dist_file.json') as file:
+            data = json.load(file)
+        pass
+
+    def __generate_data_list(self, table_row_list, date):
+        data = self.__clean_table_row(table_row_list.find_all('tr'), date)
         return data
 
-    def __clean_table_row(self, table_row_list):
+    def __clean_table_row(self, table_row_list, date):
         clean_data = []
         for table_row in table_row_list[1:]:
-            temp_table_row = []
+            temp_table_row = [date]
             table_entry_list = table_row.find_all('td')
             for table_entry in table_entry_list:
                 temp_table_row.append(self.__clean_table_entry(table_entry.text))
-            temp_table_row.pop(7)
             clean_data.append(tuple(temp_table_row))
         return clean_data[8:-8]
 
