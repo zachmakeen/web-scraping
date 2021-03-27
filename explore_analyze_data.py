@@ -12,7 +12,8 @@ class ExploreAnalyzeData:
         border_df = extract_object.get_border_df()
 
         # Explore data
-        explore_object = ExploreData(corona_df, border_df)
+        country = 'China'
+        explore_object = ExploreData(country, corona_df, border_df)
 
         # Plot data
         plot_object = PlotData()
