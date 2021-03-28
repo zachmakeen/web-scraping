@@ -12,8 +12,17 @@ class ExploreAnalyzeData:
         border_df = extract_object.get_border_df()
 
         # Explore data
-        country = 'China'
+        country = 'Belgium'
         explore_object = ExploreData(country, corona_df, border_df)
+        explore_df = explore_object.get_six_days_evolution()
+
+
+        # Plotting 6 days evolution of Italy
+        plot_data = PlotData(country, explore_df)
+        plot_data.evolution_six_days()
+
+        neighbours = explore_object.get_six_days_neighbours()
+        plot_data = PlotData(country, explore_df)
 
         # Plot data
-        plot_object = PlotData()
+        # plot_object = PlotData()
