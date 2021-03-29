@@ -9,6 +9,7 @@ class DatabaseAPI:
         self.create_db()
         self.__connection = self.create_connection()
 
+    # Creates a connection to the database
     def create_connection(self):
         try:
             if self.__db_name is not None:
@@ -21,6 +22,7 @@ class DatabaseAPI:
         except Error as err:
             print('There as a problem with the db: {}'.format(err))
 
+    # Creates a connection to MySQL
     def __create_init_connection(self):
         try:
             return connect(
@@ -31,6 +33,7 @@ class DatabaseAPI:
         except Error as err:
             print('There as a problem with the db: {}'.format(err))
 
+    # Created the database with the selected name
     def create_db(self):
         try:
             query = f'CREATE DATABASE {self.__db_name}'
@@ -39,6 +42,7 @@ class DatabaseAPI:
         except Error as err:
             print('There as a problem with the db: {}'.format(err))
 
+    # Uses the selected database
     def select_db(self):
         try:
             query = f'USE {self.__db_name}'
@@ -47,6 +51,7 @@ class DatabaseAPI:
         except Error as err:
             print('There as a problem with the db: {}'.format(err))
 
+    # Creates a table in the database
     def create_table(self, name, schema):
         try:
             query = f'CREATE TABLE `{name}` {schema}'
@@ -56,6 +61,7 @@ class DatabaseAPI:
         except Error as err:
             print('There as a problem with the db: {}'.format(err))
 
+    # Populates the selected table
     def populate_table(self, name, records):
         try:
             query = f"""
@@ -68,6 +74,7 @@ class DatabaseAPI:
         except Error as err:
             print('There as a problem with the db: {}'.format(err))
 
+    # Closes the connection to the database and MySQL
     def close_connection(self):
         self.__init_connection.close()
         self.__connection.close()
