@@ -20,6 +20,7 @@ scrape - to scrape local html file
 back - to go analyze data or exit the program
         ''')
         while True:
+
             command = input('> ').lower()
             if command == 'help':
                 print('''
@@ -63,4 +64,4 @@ back - to go analyze data or exit the program
             elif command == 'back':
                 break
             else:
-                print('Sorry, that is not a valid command.')
+                print('Sorry, that is not a valid command. Type help for more commands.')
