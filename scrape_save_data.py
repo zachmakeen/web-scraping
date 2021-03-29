@@ -12,17 +12,19 @@ class ScrapeSaveData:
 
     def interact(self):
         print('''
+help - to see the list of available commands
 save - to save html locally
 scrape - to scrape local html file
-quit - to end the program
+back - to go analyze data or exit the program
         ''')
         while True:
             command = input('> ').lower()
             if command == 'help':
                 print('''
+help - to see the list of available commands
 save - to save html locally
 scrape - to scrape local html file
-quit - to end the program
+back - to go analyze data or exit the program
                 ''')
             elif command == 'save':
                 # Save HTML locally
@@ -48,7 +50,7 @@ quit - to end the program
                 db_object = ManageDatabase()
                 db_object.add_covid_records(today_data + yesterday_data + yesterday2_data)
                 db_object.add_border_records(country_border_data)
-            elif command == 'quit':
+            elif command == 'back':
                 break
             else:
                 print('Sorry, that is not a valid command.')

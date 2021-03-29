@@ -30,7 +30,5 @@ class ExploreData:
         neighbours_countries = self.__border_df.loc[
             self.__border_df["Country,Other"] == self.__country, ["Country,Other", "Neighbour", "Distance"]]
 
-        final= neighbours_countries.loc[neighbours_countries['Distance'] == neighbours_countries['Distance'].max(), ["Neighbour"]]
-        print(final)
-
-
+        final = neighbours_countries.loc[neighbours_countries['Distance'] == neighbours_countries['Distance'].max(), ["Neighbour"]]
+        print(final.iloc[0]['Neighbour'])

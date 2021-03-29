@@ -31,5 +31,3 @@ from explore_analyze_data import ExploreAnalyzeData
 
 ead_object = ExploreAnalyzeData()
 # ead_object.interact()
-
-
