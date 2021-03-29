@@ -16,7 +16,7 @@ class ExploreAnalyzeData:
     def interact(self):
         while True:  # Asks the user to enter the country name and repeats if it does not exist
             try:
-                self.__country = str(input('Enter the country to analyze here: ')).capitalize()
+                self.__country = str(input('Enter the country to analyze here: ')).title()
                 self.__explore_object = ExploreData(self.__country, self.__corona_df, self.__border_df)
             except IndexError:
                 print('That is not a valid country')

@@ -27,4 +27,4 @@ quit - to end the program
     elif command == 'quit':
         break
     else:
-        print('Sorry, that is not a valid command.')
+        print('Sorry, that is not a valid command. Type help for more commands.')
