@@ -34,7 +34,14 @@ back - to go analyze data or exit the program
                 save_object.save_html()
             elif command == 'scrape':
                 # Scrapes file specified by date entered by user
-                self.__user_day = int(input('Enter day here: '))
+                while True:
+                    try:
+                        self.__user_day = int(input('Enter day here: '))
+                    except ValueError:
+                        print('Sorry, that is not a valid date')
+                        continue
+                    else:
+                        break
                 scrape_object = ScrapeFile(self.__user_day)
                 html_soup = scrape_object.parse_html()  # Reads HTML code and creates BeautifulSoup object
                 json_list = scrape_object.parse_json()  # Reads JSON and stores into a list of dictionaries
